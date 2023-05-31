@@ -95,7 +95,7 @@ class DateRanger extends StatefulWidget {
   final int maxYear;
 
   ///The error string that ask user to double tap
-  final String doubleTapToFindDateErrorText;
+  final String doubleTapToFindDateTipText;
 
   ///Change the dateText to your language
   final String dateText;
@@ -111,6 +111,8 @@ class DateRanger extends StatefulWidget {
 
   ///Textstyle for date text value
   final TextStyle? dateTextValueTextStyle;
+
+  final Color? monthYearTextColor;
 
   ///A date picker for selecting single dates and date ranges
   const DateRanger({
@@ -135,12 +137,13 @@ class DateRanger extends StatefulWidget {
     this.showDoubleTapInfo = true,
     this.minYear = 1940,
     this.maxYear = 2100,
-    this.doubleTapToFindDateErrorText = "Double tap to find date",
+    this.doubleTapToFindDateTipText = "Double tap to find date",
     this.dateTextColor,
     this.dateText = "Date",
     this.startDateText = "Start date",
     this.endDateText = "End date",
     this.dateTextValueTextStyle,
+    this.monthYearTextColor,
   }) : super(key: key);
 
   @override
@@ -189,7 +192,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
               primary: widget.activeItemBackground,
               onPrimary: widget.inRangeTextColor,
               onBackground: widget.outOfRangeTextColor,
-              primaryVariant: widget.borderColors)),
+              primaryContainer: widget.borderColors)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -222,7 +225,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                 child: Padding(
                   padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
                   child: Text(
-                    widget.doubleTapToFindDateErrorText,
+                    widget.doubleTapToFindDateTipText,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12),
                   ),
@@ -233,7 +236,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
               return Container(
                 constraints: BoxConstraints(maxHeight: calculateHeight(constraints)),
                 margin: EdgeInsets.only(bottom: 26),
-                padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding, vertical: 24).copyWith(top: 0),
+                padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding, vertical: 15).copyWith(top: 0),
                 decoration: BoxDecoration(color: Theme.of(context).colorScheme.background, borderRadius: BorderRadius.circular(10), boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.6))]),
                 child: InheritedRanger(
                   selectingStart: selectingStart,
@@ -259,6 +262,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                           onNewDate: onNewDate,
                           onRangeChanged: onRangeChanged,
                           onError: onError,
+                          monthYearTextColor: this.widget.monthYearTextColor,
                         );
                       else
                         widget = SecondaryPage(dateTime: settings.arguments as DateTime);
