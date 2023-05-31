@@ -154,7 +154,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
           var secondary = dateTime.compareTo(!ranger.selectingStart ? value.start : value.end) == 0;
           var inRange = dateTime.isBefore(value.end) && dateTime.isAfter(value.start) || (secondary || primary);
           var borderRadius = Radius.circular(itemWidth / 2);
-          print('dateRange: $day = $isStart');
+          //print('dateRange: $day = $isStart');
 
           var inRangeTextColor = colorScheme.onPrimary;
           var outOfRangeTextColor = colorScheme.onBackground;
