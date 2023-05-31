@@ -94,6 +94,12 @@ class DateRanger extends StatefulWidget {
   final int minYear;
   final int maxYear;
 
+  ///The error string that ask user to double tap
+  final String doubleTapToFindDateErrorText;
+
+  ///Color for the date text value
+  final Color? dateTextColor;
+
   ///A date picker for selecting single dates and date ranges
   const DateRanger(
       {Key? key,
@@ -114,25 +120,23 @@ class DateRanger extends StatefulWidget {
       this.itemHeight = 32,
       this.runSpacing = 10,
       this.activeDateBottomSpace = 10,
-      this.showDoubleTapInfo = true, this.minYear = 1940, this.maxYear = 2100})
+      this.showDoubleTapInfo = true,
+      this.minYear = 1940,
+      this.maxYear = 2100,
+      this.doubleTapToFindDateErrorText = "Double tap to find date",
+      this.dateTextColor})
       : super(key: key);
 
   @override
   _DateRangerState createState() => _DateRangerState();
 }
 
-class _DateRangerState extends State<DateRanger>
-    with SingleTickerProviderStateMixin {
+class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateMixin {
   late double itemWidth = widget.itemHeight + (widget.itemHeight * 0.25);
   late var isRange = widget.rangerType == DateRangerType.range;
-  late final initialDate =
-      isRange ? DateTime.now() : widget.initialDate ?? DateTime.now();
+  late final initialDate = isRange ? DateTime.now() : widget.initialDate ?? DateTime.now();
   final showInfo = ValueNotifier(false);
-  late ValueNotifier<DateTimeRange> dateRange = ValueNotifier(
-      widget.initialRange ??
-          DateTimeRange(
-              end: DateUtils.dateOnly(initialDate),
-              start: DateUtils.dateOnly(initialDate)));
+  late ValueNotifier<DateTimeRange> dateRange = ValueNotifier(widget.initialRange ?? DateTimeRange(end: DateUtils.dateOnly(initialDate), start: DateUtils.dateOnly(initialDate)));
   late var activeYear = dateRange.value.start.year;
   late var tabController = TabController(length: 12, vsync: this);
   final activeTab = ValueNotifier(0);
@@ -150,8 +154,7 @@ class _DateRangerState extends State<DateRanger>
       tabController.animateTo(dateRange.value.start.month - 1);
       if (widget.showDoubleTapInfo) {
         showInfo.value = true;
-        await Future.delayed(
-            Duration(seconds: 3), () => showInfo.value = false);
+        await Future.delayed(Duration(seconds: 3), () => showInfo.value = false);
       }
     });
     super.initState();
@@ -163,17 +166,14 @@ class _DateRangerState extends State<DateRanger>
     return Theme(
       data: ThemeData(
           brightness: Theme.of(context).brightness,
-          colorScheme: (Theme.of(context).brightness == Brightness.light
-                  ? ColorScheme.light()
-                  : ColorScheme.dark())
-              .copyWith(
-                  secondary: widget.rangeBackground,
-                  error: widget.errorColor,
-                  background: widget.backgroundColor,
-                  primary: widget.activeItemBackground,
-                  onPrimary: widget.inRangeTextColor,
-                  onBackground: widget.outOfRangeTextColor,
-                  primaryVariant: widget.borderColors)),
+          colorScheme: (Theme.of(context).brightness == Brightness.light ? ColorScheme.light() : ColorScheme.dark()).copyWith(
+              secondary: widget.rangeBackground,
+              error: widget.errorColor,
+              background: widget.backgroundColor,
+              primary: widget.activeItemBackground,
+              onPrimary: widget.inRangeTextColor,
+              onBackground: widget.outOfRangeTextColor,
+              primaryVariant: widget.borderColors)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -204,32 +204,21 @@ class _DateRangerState extends State<DateRanger>
                 duration: Duration(seconds: 2),
                 opacity: value ? 1 : 0,
                 child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
                   child: Text(
-                    "Double tap to find date",
+                    widget.doubleTapToFindDateErrorText,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontSize: 12),
+                    style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12),
                   ),
                 )),
           ),
           LayoutBuilder(
             builder: (context, constraints) {
               return Container(
-                constraints:
-                    BoxConstraints(maxHeight: calculateHeight(constraints)),
+                constraints: BoxConstraints(maxHeight: calculateHeight(constraints)),
                 margin: EdgeInsets.only(bottom: 26),
-                padding: EdgeInsets.symmetric(
-                        horizontal: widget.horizontalPadding, vertical: 24)
-                    .copyWith(top: 0),
-                decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.background,
-                    borderRadius: BorderRadius.circular(10),
-                    boxShadow: [
-                      BoxShadow(color: Colors.black12.withOpacity(0.6))
-                    ]),
+                padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding, vertical: 24).copyWith(top: 0),
+                decoration: BoxDecoration(color: Theme.of(context).colorScheme.background, borderRadius: BorderRadius.circular(10), boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.6))]),
                 child: InheritedRanger(
                   selectingStart: selectingStart,
                   activeYear: activeYear,
@@ -256,8 +245,7 @@ class _DateRangerState extends State<DateRanger>
                           onError: onError,
                         );
                       else
-                        widget = SecondaryPage(
-                            dateTime: settings.arguments as DateTime);
+                        widget = SecondaryPage(dateTime: settings.arguments as DateTime);
                       return MaterialPageRoute(builder: (context) => widget);
                     },
                   ),
@@ -276,9 +264,7 @@ class _DateRangerState extends State<DateRanger>
                           )
                         : Text(
                             value,
-                            style: TextStyle(
-                                color: Theme.of(context).colorScheme.error,
-                                fontSize: 14),
+                            style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 14),
                           ),
                   )),
         ],
@@ -287,15 +273,9 @@ class _DateRangerState extends State<DateRanger>
   }
 
   double calculateHeight(BoxConstraints constraints) {
-    var itemsPerRole =
-        (constraints.maxWidth - (widget.horizontalPadding * 2)) ~/ itemWidth;
+    var itemsPerRole = (constraints.maxWidth - (widget.horizontalPadding * 2)) ~/ itemWidth;
     var maxDaysPerMonth = 31;
-    return maxDaysPerMonth /
-        itemsPerRole *
-        (widget.itemHeight +
-            widget.runSpacing +
-            widget.activeDateBottomSpace +
-            widget.activeDateFontSize);
+    return maxDaysPerMonth / itemsPerRole * (widget.itemHeight + widget.runSpacing + widget.activeDateBottomSpace + widget.activeDateFontSize);
   }
 
   ///adjust selections for single case on state changes with different rangeTypes
@@ -303,8 +283,7 @@ class _DateRangerState extends State<DateRanger>
     if (widget.rangerType == DateRangerType.single) {
       selectingStart = true;
       var currentRange = dateRange.value;
-      if (currentRange.start.compareTo(currentRange.end) != 0)
-        dateRange.value = currentRange.copyWith(end: currentRange.start);
+      if (currentRange.start.compareTo(currentRange.end) != 0) dateRange.value = currentRange.copyWith(end: currentRange.start);
     }
   }
 
@@ -330,8 +309,7 @@ class _DateRangerState extends State<DateRanger>
           setState(() {
             activeYear = (start ? range.start : range.end).year;
           });
-          tabController
-              .animateTo(start ? range.start.month - 1 : range.end.month - 1);
+          tabController.animateTo(start ? range.start.month - 1 : range.end.month - 1);
         },
         child: Builder(
           builder: (context) {
@@ -339,37 +317,25 @@ class _DateRangerState extends State<DateRanger>
             return AnimatedContainer(
               padding: EdgeInsets.symmetric(horizontal: 22, vertical: 6),
               decoration: BoxDecoration(
-                  border: Border.all(
-                      color:
-                          selectingStart && start || !selectingStart && !start
-                              ? Theme.of(context).colorScheme.primaryVariant
-                              : Colors.transparent),
+                  border: Border.all(color: selectingStart && start || !selectingStart && !start ? Theme.of(context).colorScheme.primaryVariant : Colors.transparent),
                   color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.circular(7)),
               duration: Duration(milliseconds: 100),
               child: Column(
-                crossAxisAlignment: isRange
-                    ? CrossAxisAlignment.start
-                    : CrossAxisAlignment.center,
+                crossAxisAlignment: isRange ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     isRange ? "${start ? "Start" : "End"} date" : "Date",
                     maxLines: 1,
-                    style: TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onBackground
-                            .withOpacity(0.3),
-                        fontSize: 12),
+                    style: TextStyle(color: widget.dateTextColor ?? Theme.of(context).colorScheme.onBackground.withOpacity(0.3), fontSize: 12),
                   ),
                   SizedBox(height: 4),
                   ValueListenableBuilder<DateTimeRange>(
                     valueListenable: dateRange,
                     builder: (context, value, child) => FittedBox(
                       child: Text(
-                        (widget.outputDateFormat ?? DateFormat.yMd())
-                            .format(start ? value.start : value.end),
+                        (widget.outputDateFormat ?? DateFormat.yMd()).format(start ? value.start : value.end),
                         maxLines: 1,
                       ),
                     ),
