@@ -33,6 +33,9 @@ class DateRanger extends StatefulWidget {
   ///The text color of dates(days) that are in range of the selected __Start__ and __End__ dates.
   final Color? inRangeTextColor;
 
+  ///The text color of dates(days) that are the selected __Start__ and __End__ dates.
+  final Color? selectedTextColor;
+
   ///The initial [DateTimeRange] of the picker.
   ///
   ///The picker jumps to the month of the __start date__ on initialization.
@@ -134,6 +137,7 @@ class DateRanger extends StatefulWidget {
     this.initialRange,
     this.initialDate,
     this.onRangeChanged,
+    this.selectedTextColor,
     this.inRangeTextColor,
     this.outOfRangeTextColor,
     this.rangerType = DateRangerType.range,
@@ -277,6 +281,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                           onRangeChanged: onRangeChanged,
                           onError: onError,
                           monthYearTextColor: this.widget.monthYearTextColor,
+                          selectedTextColor: this.widget.selectedTextColor ?? Theme.of(context).colorScheme.onPrimary,
                         );
                       else
                         widget = SecondaryPage(

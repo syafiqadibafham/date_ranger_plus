@@ -5,12 +5,14 @@ class PrimaryPage extends StatefulWidget {
   final OnRangeChanged onRangeChanged;
   final void Function(String) onError;
   final Color? monthYearTextColor;
+  final Color selectedTextColor;
 
   PrimaryPage({
     Key? key,
     required this.onNewDate,
     required this.onRangeChanged,
     required this.onError,
+    required this.selectedTextColor,
     this.monthYearTextColor,
   }) : super(key: key);
 
@@ -168,7 +170,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          border: Border.all(color: primary ? colorScheme.primaryVariant : Colors.transparent, width: 2),
+                          border: Border.all(color: primary ? colorScheme.outline : Colors.transparent, width: 2),
                           color: primary || secondary ? colorScheme.primary : Colors.transparent),
                       duration: Duration(milliseconds: 500),
                       child: Text(
@@ -178,9 +180,9 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         style: TextStyle(
                             fontSize: theme.textTheme.bodyText1!.fontSize,
                             color: primary || secondary
-                                ? inRangeTextColor
+                                ? widget.selectedTextColor
                                 : inRange && isRange
-                                    ? inRangeTextColor.withOpacity(0.8)
+                                    ? inRangeTextColor
                                     : outOfRangeTextColor),
                       )),
                 );
