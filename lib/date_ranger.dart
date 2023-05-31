@@ -97,35 +97,51 @@ class DateRanger extends StatefulWidget {
   ///The error string that ask user to double tap
   final String doubleTapToFindDateErrorText;
 
+  ///Change the dateText to your language
+  final String dateText;
+
+  ///Change the startDateText to your language
+  final String startDateText;
+
+  ///Change the endDateText to your language
+  final String endDateText;
+
   ///Color for the date text value
   final Color? dateTextColor;
 
+  ///Textstyle for date text value
+  final TextStyle? dateTextValueTextStyle;
+
   ///A date picker for selecting single dates and date ranges
-  const DateRanger(
-      {Key? key,
-      this.borderColors,
-      this.backgroundColor,
-      this.errorColor,
-      this.rangeBackground,
-      this.activeItemBackground,
-      this.initialRange,
-      this.initialDate,
-      this.onRangeChanged,
-      this.inRangeTextColor,
-      this.outOfRangeTextColor,
-      this.rangerType = DateRangerType.range,
-      this.outputDateFormat,
-      this.activeDateFontSize = 16.0,
-      this.horizontalPadding = 8,
-      this.itemHeight = 32,
-      this.runSpacing = 10,
-      this.activeDateBottomSpace = 10,
-      this.showDoubleTapInfo = true,
-      this.minYear = 1940,
-      this.maxYear = 2100,
-      this.doubleTapToFindDateErrorText = "Double tap to find date",
-      this.dateTextColor})
-      : super(key: key);
+  const DateRanger({
+    Key? key,
+    this.borderColors,
+    this.backgroundColor,
+    this.errorColor,
+    this.rangeBackground,
+    this.activeItemBackground,
+    this.initialRange,
+    this.initialDate,
+    this.onRangeChanged,
+    this.inRangeTextColor,
+    this.outOfRangeTextColor,
+    this.rangerType = DateRangerType.range,
+    this.outputDateFormat,
+    this.activeDateFontSize = 16.0,
+    this.horizontalPadding = 8,
+    this.itemHeight = 32,
+    this.runSpacing = 10,
+    this.activeDateBottomSpace = 10,
+    this.showDoubleTapInfo = true,
+    this.minYear = 1940,
+    this.maxYear = 2100,
+    this.doubleTapToFindDateErrorText = "Double tap to find date",
+    this.dateTextColor,
+    this.dateText = "Date",
+    this.startDateText = "Start date",
+    this.endDateText = "End date",
+    this.dateTextValueTextStyle,
+  }) : super(key: key);
 
   @override
   _DateRangerState createState() => _DateRangerState();
@@ -326,7 +342,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    isRange ? "${start ? "Start" : "End"} date" : "Date",
+                    isRange ? "${start ? widget.startDateText : widget.endDateText}" : widget.dateText,
                     maxLines: 1,
                     style: TextStyle(color: widget.dateTextColor ?? Theme.of(context).colorScheme.onBackground.withOpacity(0.3), fontSize: 12),
                   ),
@@ -337,6 +353,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                       child: Text(
                         (widget.outputDateFormat ?? DateFormat.yMd()).format(start ? value.start : value.end),
                         maxLines: 1,
+                        style: widget.dateTextValueTextStyle,
                       ),
                     ),
                   )
