@@ -224,6 +224,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                             endIndent: 12,
                             indent: 12,
                             thickness: 2,
+                            color: widget.dateTextValueTextStyle?.color ?? Theme.of(context).colorScheme.onBackground,
                           ))),
                   pickerOutput(false)
                 ],
