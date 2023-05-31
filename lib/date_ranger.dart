@@ -327,13 +327,14 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
               builder: (context, value, child) => AnimatedSwitcher(
                     duration: Duration(milliseconds: 300),
                     reverseDuration: Duration(seconds: 2),
-                    child: value.isEmpty
-                        ? SizedBox(
-                            height: 6,
-                          )
-                        : Text(
-                            value,
-                            style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 14),
+                    child: value.isEmpty || value == ''
+                        ? SizedBox.shrink()
+                        : Padding(
+                            padding: const EdgeInsets.only(bottom: 8),
+                            child: Text(
+                              value,
+                              style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 14),
+                            ),
                           ),
                   )),
         ],
