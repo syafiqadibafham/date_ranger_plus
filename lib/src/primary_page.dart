@@ -126,7 +126,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                 var isExtreme = isExtremeStart || isExtremeEnd;
                 var isItemsEnd = wrapIndex == daysInMonth - 1;
                 return Transform.translate(
-                  offset: Offset(isStart || isEnd || isExtreme || isItemsEnd && !(isStart && isEnd) ? (isStart || isExtremeStart ? 4 : -4) : 0, 0),
+                  offset: Offset(isStart || isEnd || isExtreme || isItemsEnd && !(isStart && isEnd) ? (isStart || isExtremeStart ? -4 : 4) : 0, 0),
                   child: Container(
                       width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemWidth : itemWidth,
                       height: itemHeight,
