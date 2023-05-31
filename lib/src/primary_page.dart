@@ -126,9 +126,9 @@ class _PrimaryPageState extends State<PrimaryPage> {
                 var isExtreme = isExtremeStart || isExtremeEnd;
                 var isItemsEnd = wrapIndex == daysInMonth - 1;
                 return Transform.translate(
-                  offset: Offset(isStart || isEnd || isExtreme || isItemsEnd && !(isStart && isEnd) ? (isStart || isExtremeStart ? 2 : -2) : 0, 0),
+                  offset: Offset(isStart || isEnd || isExtreme || isItemsEnd && !(isStart && isEnd) ? (isStart || isExtremeStart ? 4 : -4) : 0, 0),
                   child: Container(
-                      width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemHeight : itemWidth,
+                      width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemWidth - 4 : itemWidth,
                       height: itemHeight,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.horizontal(left: isStart || isExtremeStart ? borderRadius : Radius.zero, right: isEnd || isExtremeEnd || isItemsEnd ? borderRadius : Radius.zero),
