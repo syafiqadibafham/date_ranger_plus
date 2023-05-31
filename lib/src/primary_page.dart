@@ -59,7 +59,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
               );
             },
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 6),
           Expanded(
             child: TabBarView(
               controller: ranger.tabController,
@@ -131,7 +131,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                       width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemHeight : itemWidth,
                       height: itemHeight,
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.horizontal(left: isStart || isExtremeStart ? borderRadius : Radius.zero, right: isEnd || isExtremeEnd || isItemsEnd ? borderRadius : Radius.zero),
+                          //borderRadius: BorderRadius.horizontal(left: isStart || isExtremeStart ? borderRadius : Radius.zero, right: isEnd || isExtremeEnd || isItemsEnd ? borderRadius : Radius.zero),
                           color: inRange && isRange && !(isStart && isEnd) ? colorScheme.secondary : Colors.transparent)),
                 );
               }),
@@ -178,7 +178,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         maxLines: 1,
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                            fontSize: theme.textTheme.bodyText1!.fontSize,
+                            fontSize: 14,
                             color: primary || secondary
                                 ? widget.selectedTextColor
                                 : inRange && isRange
