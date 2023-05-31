@@ -114,6 +114,15 @@ class DateRanger extends StatefulWidget {
 
   final Color? monthYearTextColor;
 
+  ///Change done text in Done button in month year selection
+  final String doneText;
+
+  ///Change month selection textStyle
+  final TextStyle? monthSelectionTextStyle;
+
+  ///Change year selection textStyle
+  final TextStyle? yearSelectionTextStyle;
+
   ///A date picker for selecting single dates and date ranges
   const DateRanger({
     Key? key,
@@ -144,6 +153,9 @@ class DateRanger extends StatefulWidget {
     this.endDateText = "End date",
     this.dateTextValueTextStyle,
     this.monthYearTextColor,
+    this.doneText = "Done",
+    this.monthSelectionTextStyle,
+    this.yearSelectionTextStyle,
   }) : super(key: key);
 
   @override
@@ -266,7 +278,13 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                           monthYearTextColor: this.widget.monthYearTextColor,
                         );
                       else
-                        widget = SecondaryPage(dateTime: settings.arguments as DateTime);
+                        widget = SecondaryPage(
+                          dateTime: settings.arguments as DateTime,
+                          monthYearTextColor: this.widget.monthYearTextColor,
+                          doneText: this.widget.doneText,
+                          monthSelectionTextStyle: this.widget.monthSelectionTextStyle,
+                          yearSelectionTextStyle: this.widget.yearSelectionTextStyle,
+                        );
                       return MaterialPageRoute(builder: (context) => widget);
                     },
                   ),
