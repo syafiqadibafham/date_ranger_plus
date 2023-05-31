@@ -106,8 +106,10 @@ class _PrimaryPageState extends State<PrimaryPage> {
         child: Stack(
           alignment: Alignment.topCenter,
           children: [
-            Wrap(
-              runSpacing: ranger.runSpacing,
+            GridView(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
+              shrinkWrap: true,
+              //runSpacing: ranger.runSpacing,
               children: List.generate(daysInMonth, (wrapIndex) {
                 var year = ranger.activeYear;
                 var month = tabIndex + 1;
@@ -128,7 +130,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                 return Transform.translate(
                   offset: Offset(0, 0),
                   child: Container(
-                      width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemHeight : itemWidth,
+                      width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemWidth : itemWidth,
                       height: itemHeight,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.horizontal(left: isStart || isExtremeStart ? borderRadius : Radius.zero, right: isEnd || isExtremeEnd || isItemsEnd ? borderRadius : Radius.zero),
