@@ -1,4 +1,4 @@
-import 'package:date_ranger/date_ranger.dart';
+import 'package:date_ranger_plus/date_ranger.dart';
 import 'package:flutter/material.dart';
 
 class Example extends StatefulWidget {
@@ -8,8 +8,7 @@ class Example extends StatefulWidget {
 
 class _ExampleState extends State<Example> {
   var initialDate = DateTime.now();
-  var initialDateRange =
-      DateTimeRange(start: DateTime.now(), end: DateTime.now());
+  var initialDateRange = DateTimeRange(start: DateTime.now(), end: DateTime.now());
 
   @override
   Widget build(BuildContext context) {
