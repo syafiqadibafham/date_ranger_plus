@@ -73,7 +73,7 @@ class SecondaryPage extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Text(
                 doneText,
-                style: TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                style: TextStyle(color: Theme.of(context).colorScheme.background),
               ),
             ),
           ),

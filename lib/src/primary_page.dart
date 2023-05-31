@@ -6,6 +6,9 @@ class PrimaryPage extends StatefulWidget {
   final void Function(String) onError;
   final Color? monthYearTextColor;
   final Color selectedTextColor;
+  final String doneText;
+
+  final Function()? onTap;
 
   PrimaryPage({
     Key? key,
@@ -14,6 +17,8 @@ class PrimaryPage extends StatefulWidget {
     required this.onError,
     required this.selectedTextColor,
     this.monthYearTextColor,
+    required this.doneText,
+    this.onTap,
   }) : super(key: key);
 
   @override
@@ -32,6 +37,8 @@ class _PrimaryPageState extends State<PrimaryPage> {
     colorScheme = theme.colorScheme;
     return LayoutBuilder(
       builder: (context, constraints) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           ValueListenableBuilder<int>(
             valueListenable: ranger.activeTab,
@@ -59,13 +66,38 @@ class _PrimaryPageState extends State<PrimaryPage> {
               );
             },
           ),
-          SizedBox(height: 6),
+          SizedBox(height: 20),
+          //TODO: Add days
+          // Flexible(
+          //   child: GridView(
+          //     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
+          //     padding: Edgeinsets.zero
+          //     children: List.generate(
+          //         7,
+          //         (index) => Center(
+          //               child: Text(
+          //                 DateFormat('EE').format(DateTime(index)).toString(),
+          //                 style: TextStyle(fontSize: 14, color: widget.monthYearTextColor),
+          //               ),
+          //             )),
+          //   ),
+          // ),
           Expanded(
             child: TabBarView(
               controller: ranger.tabController,
               children: List.generate(12, (tabIndex) => tabView(tabIndex, constraints.maxWidth)),
             ),
           ),
+          InkWell(
+            onTap: widget.onTap,
+            child: Padding(
+              padding: const EdgeInsets.all(5),
+              child: Text(
+                widget.doneText,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: colorScheme.primary),
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -101,97 +133,85 @@ class _PrimaryPageState extends State<PrimaryPage> {
     var isRange = ranger.rangerType == DateRangerType.range;
     return ValueListenableBuilder<DateTimeRange>(
       valueListenable: ranger.dateRange,
-      builder: (context, value, child) => Align(
-        alignment: Alignment.bottomCenter,
-        child: Stack(
-          alignment: Alignment.topCenter,
-          children: [
-            GridView(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
-              shrinkWrap: true,
-              //runSpacing: ranger.runSpacing,
-              children: List.generate(daysInMonth, (wrapIndex) {
-                var year = ranger.activeYear;
-                var month = tabIndex + 1;
-                var day = wrapIndex + 1;
-                var dateTime = DateTime(year, month, day);
-                var isStart = dateTime.compareTo(value.start) == 0;
-                var isEnd = dateTime.compareTo(value.end) == 0;
-                var primary = dateTime.compareTo(ranger.selectingStart ? value.start : value.end) == 0;
-                var secondary = dateTime.compareTo(!ranger.selectingStart ? value.start : value.end) == 0;
-                var inRange = dateTime.isBefore(value.end) && dateTime.isAfter(value.start) || (secondary || primary);
-                var borderRadius = Radius.circular(itemWidth / 2);
+      builder: (context, value, child) => GridView(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7, mainAxisSpacing: 3),
+        physics: NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        padding: EdgeInsets.zero,
+        //runSpacing: ranger.runSpacing,
+        clipBehavior: Clip.none,
+        children: List.generate(daysInMonth, (wrapIndex) {
+          var year = ranger.activeYear;
+          var month = tabIndex + 1;
+          var day = wrapIndex + 1;
+          var dateTime = DateTime(year, month, day);
+          var isStart = dateTime.compareTo(value.start) == 0;
+          var isEnd = dateTime.compareTo(value.end) == 0;
+          var primary = dateTime.compareTo(ranger.selectingStart ? value.start : value.end) == 0;
+          var secondary = dateTime.compareTo(!ranger.selectingStart ? value.start : value.end) == 0;
+          var inRange = dateTime.isBefore(value.end) && dateTime.isAfter(value.start) || (secondary || primary);
+          var borderRadius = Radius.circular(itemWidth / 2);
 
-                ///Positioned at extreme ends
-                var isExtremeEnd = day % itemsPerRole == 0;
-                var isExtremeStart = day % itemsPerRole == 1;
-                var isExtreme = isExtremeStart || isExtremeEnd;
-                var isItemsEnd = wrapIndex == daysInMonth - 1;
-                return Transform.translate(
-                  offset: Offset(0, 0),
-                  child: Container(
-                      width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemWidth : itemWidth,
-                      height: itemHeight,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.horizontal(left: isStart || isExtremeStart ? borderRadius : Radius.zero, right: isEnd || isExtremeEnd || isItemsEnd ? borderRadius : Radius.zero),
-                          color: inRange && isRange && !(isStart && isEnd) ? colorScheme.secondary : colorScheme.background)),
-                );
-              }),
-            ),
-            Wrap(
-              runSpacing: ranger.runSpacing,
-              children: List.generate(daysInMonth, (wrapIndex) {
-                var year = ranger.activeYear;
-                var month = tabIndex + 1;
-                var day = wrapIndex + 1;
-                var dateTime = DateTime(year, month, day);
-                var primary = dateTime.compareTo(ranger.selectingStart ? value.start : value.end) == 0;
-                var secondary = dateTime.compareTo(!ranger.selectingStart ? value.start : value.end) == 0;
-                var inRange = dateTime.isBefore(value.end) && dateTime.isAfter(value.start) || (secondary || primary);
-                var inRangeTextColor = colorScheme.onPrimary;
-                var outOfRangeTextColor = colorScheme.onBackground;
-                return InkResponse(
-                  onTap: () async {
-                    var startIsAfterEnd = ranger.selectingStart && !dateTime.compareTo(value.end).isNegative && isRange;
-                    var endISBeforeStart = !ranger.selectingStart && dateTime.compareTo(value.start).isNegative && isRange;
-                    if (startIsAfterEnd || endISBeforeStart) {
-                      widget.onError(startIsAfterEnd ? "Start date cannot be after end date" : "End date cannot be before start date");
-                    } else {
-                      ///set the start and end to the same day if is single picker
-                      var newRange = isRange
-                          ? value.copyWith(start: ranger.selectingStart ? dateTime : value.start, end: !ranger.selectingStart ? dateTime : value.end)
-                          : DateTimeRange(start: dateTime, end: dateTime);
-                      ranger.dateRange.value = newRange;
-                      widget.onRangeChanged(newRange);
-                    }
-                  },
-                  child: AnimatedContainer(
-                      key: ValueKey(dateTime),
-                      width: itemWidth,
-                      height: itemHeight,
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: primary ? colorScheme.outline : Colors.transparent, width: 2),
-                          color: primary || secondary ? colorScheme.primary : Colors.transparent),
-                      duration: Duration(milliseconds: 500),
-                      child: Text(
-                        "${wrapIndex + 1}",
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            fontSize: 14,
-                            color: primary || secondary
-                                ? widget.selectedTextColor
-                                : inRange && isRange
-                                    ? inRangeTextColor
-                                    : outOfRangeTextColor),
-                      )),
-                );
-              }),
-            ),
-          ],
-        ),
+          var inRangeTextColor = colorScheme.onPrimary;
+          var outOfRangeTextColor = colorScheme.onBackground;
+
+          ///Positioned at extreme ends
+          var isExtremeEnd = day % itemsPerRole == 0;
+          var isExtremeStart = day % itemsPerRole == 1;
+          var isExtreme = isExtremeStart || isExtremeEnd;
+          var isItemsEnd = wrapIndex == daysInMonth - 1;
+          return Stack(
+            alignment: Alignment.topCenter,
+            clipBehavior: Clip.none,
+            children: [
+              Container(
+                  // width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemWidth : itemWidth,
+                  //height: itemHeight,
+                  margin: EdgeInsets.only(top: 3, bottom: 3),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.horizontal(left: isStart ? borderRadius : Radius.zero, right: isEnd ? borderRadius : Radius.zero),
+                      color: inRange && isRange && !(isStart && isEnd) ? colorScheme.secondary : colorScheme.background)),
+              InkResponse(
+                onTap: () async {
+                  var startIsAfterEnd = ranger.selectingStart && !dateTime.compareTo(value.end).isNegative && isRange;
+                  var endISBeforeStart = !ranger.selectingStart && dateTime.compareTo(value.start).isNegative && isRange;
+                  if (startIsAfterEnd || endISBeforeStart) {
+                    widget.onError(startIsAfterEnd ? "Start date cannot be after end date" : "End date cannot be before start date");
+                  } else {
+                    ///set the start and end to the same day if is single picker
+                    var newRange = isRange
+                        ? value.copyWith(start: ranger.selectingStart ? dateTime : value.start, end: !ranger.selectingStart ? dateTime : value.end)
+                        : DateTimeRange(start: dateTime, end: dateTime);
+                    ranger.dateRange.value = newRange;
+                    widget.onRangeChanged(newRange);
+                  }
+                },
+                child: AnimatedContainer(
+                    key: ValueKey(dateTime),
+                    // width: itemWidth,
+                    // height: itemHeight,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: primary ? colorScheme.outline : Colors.transparent, width: 2),
+                        color: primary || secondary ? colorScheme.primary : Colors.transparent),
+                    duration: Duration(milliseconds: 500),
+                    child: Text(
+                      "${wrapIndex + 1}",
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: primary || secondary
+                              ? widget.selectedTextColor
+                              : inRange && isRange
+                                  ? inRangeTextColor
+                                  : outOfRangeTextColor),
+                    )),
+              )
+            ],
+          );
+        }),
       ),
     );
   }

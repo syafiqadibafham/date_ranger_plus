@@ -126,6 +126,8 @@ class DateRanger extends StatefulWidget {
   ///Change year selection textStyle
   final TextStyle? yearSelectionTextStyle;
 
+  final bool isDatePickerEnable;
+
   ///A date picker for selecting single dates and date ranges
   const DateRanger({
     Key? key,
@@ -160,6 +162,7 @@ class DateRanger extends StatefulWidget {
     this.doneText = "Done",
     this.monthSelectionTextStyle,
     this.yearSelectionTextStyle,
+    this.isDatePickerEnable = true,
   }) : super(key: key);
 
   @override
@@ -171,6 +174,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
   late var isRange = widget.rangerType == DateRangerType.range;
   late final initialDate = isRange ? DateTime.now() : widget.initialDate ?? DateTime.now();
   final showInfo = ValueNotifier(false);
+  final enableDatePicker = ValueNotifier(false);
   late ValueNotifier<DateTimeRange> dateRange = ValueNotifier(widget.initialRange ?? DateTimeRange(end: DateUtils.dateOnly(initialDate), start: DateUtils.dateOnly(initialDate)));
   late var activeYear = dateRange.value.start.year;
   late var tabController = TabController(length: 12, vsync: this);
@@ -237,67 +241,79 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
           ),
           ValueListenableBuilder<bool>(
             valueListenable: showInfo,
-            builder: (context, value, child) => AnimatedOpacity(
+            builder: (context, value, child) => AnimatedSize(
                 duration: Duration(seconds: 2),
-                opacity: value ? 1 : 0,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-                  child: Text(
-                    widget.doubleTapToFindDateTipText,
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12),
+                child: Visibility(
+                  visible: value,
+                  replacement: SizedBox(height: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+                    child: Text(
+                      widget.doubleTapToFindDateTipText,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12),
+                    ),
                   ),
                 )),
           ),
-          LayoutBuilder(
-            builder: (context, constraints) {
-              return Container(
-                constraints: BoxConstraints(maxHeight: calculateHeight(constraints)),
-                margin: EdgeInsets.only(bottom: 26),
-                padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding, vertical: 15).copyWith(top: 0),
-                decoration: BoxDecoration(color: Theme.of(context).colorScheme.background, borderRadius: BorderRadius.circular(10), boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.6))]),
-                child: InheritedRanger(
-                  selectingStart: selectingStart,
-                  activeYear: activeYear,
-                  tabController: tabController,
-                  rangerType: widget.rangerType,
-                  activeTab: activeTab,
-                  dateRange: dateRange,
-                  navKey: navKey,
-                  itemHeight: widget.itemHeight,
-                  itemWidth: itemWidth,
-                  runSpacing: widget.runSpacing,
-                  activeDateBottomSpace: widget.activeDateBottomSpace,
-                  activeDateFontSize: widget.activeDateFontSize,
-                  minYear: widget.minYear,
-                  maxYear: widget.maxYear,
-                  child: Navigator(
-                    key: navKey,
-                    onGenerateRoute: (settings) {
-                      Widget widget;
-                      if (settings.name == "/")
-                        widget = PrimaryPage(
-                          onNewDate: onNewDate,
-                          onRangeChanged: onRangeChanged,
-                          onError: onError,
-                          monthYearTextColor: this.widget.monthYearTextColor,
-                          selectedTextColor: this.widget.selectedTextColor ?? Theme.of(context).colorScheme.onPrimary,
-                        );
-                      else
-                        widget = SecondaryPage(
-                          dateTime: settings.arguments as DateTime,
-                          monthYearTextColor: this.widget.monthYearTextColor,
-                          doneText: this.widget.doneText,
-                          monthSelectionTextStyle: this.widget.monthSelectionTextStyle,
-                          yearSelectionTextStyle: this.widget.yearSelectionTextStyle,
-                        );
-                      return MaterialPageRoute(builder: (context) => widget);
-                    },
-                  ),
-                ),
-              );
-            },
-          ),
+          ValueListenableBuilder<bool>(
+              valueListenable: enableDatePicker,
+              builder: (context, value, child) {
+                return value
+                    ? LayoutBuilder(
+                        builder: (context, constraints) {
+                          return Container(
+                            constraints: BoxConstraints(maxHeight: calculateHeight(constraints) + 100),
+                            margin: EdgeInsets.only(bottom: 26),
+                            padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding, vertical: 15).copyWith(top: 0),
+                            decoration:
+                                BoxDecoration(color: Theme.of(context).colorScheme.background, borderRadius: BorderRadius.circular(10), boxShadow: [BoxShadow(color: Colors.black12.withOpacity(0.6))]),
+                            child: InheritedRanger(
+                              selectingStart: selectingStart,
+                              activeYear: activeYear,
+                              tabController: tabController,
+                              rangerType: widget.rangerType,
+                              activeTab: activeTab,
+                              dateRange: dateRange,
+                              navKey: navKey,
+                              itemHeight: widget.itemHeight,
+                              itemWidth: itemWidth,
+                              runSpacing: widget.runSpacing,
+                              activeDateBottomSpace: widget.activeDateBottomSpace,
+                              activeDateFontSize: widget.activeDateFontSize,
+                              minYear: widget.minYear,
+                              maxYear: widget.maxYear,
+                              child: Navigator(
+                                key: navKey,
+                                onGenerateRoute: (settings) {
+                                  Widget widget;
+                                  if (settings.name == "/")
+                                    widget = PrimaryPage(
+                                      onNewDate: onNewDate,
+                                      onRangeChanged: onRangeChanged,
+                                      onError: onError,
+                                      doneText: this.widget.doneText,
+                                      monthYearTextColor: this.widget.monthYearTextColor,
+                                      selectedTextColor: this.widget.selectedTextColor ?? Theme.of(context).colorScheme.onPrimary,
+                                      onTap: () => enableDatePicker.value = false,
+                                    );
+                                  else
+                                    widget = SecondaryPage(
+                                      dateTime: settings.arguments as DateTime,
+                                      monthYearTextColor: this.widget.monthYearTextColor,
+                                      doneText: this.widget.doneText,
+                                      monthSelectionTextStyle: this.widget.monthSelectionTextStyle,
+                                      yearSelectionTextStyle: this.widget.yearSelectionTextStyle,
+                                    );
+                                  return MaterialPageRoute(builder: (context) => widget);
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Container();
+              }),
           ValueListenableBuilder<String>(
               valueListenable: errorText,
               builder: (context, value, child) => AnimatedSwitcher(
@@ -305,7 +321,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                     reverseDuration: Duration(seconds: 2),
                     child: value.isEmpty
                         ? SizedBox(
-                            height: 16,
+                            height: 6,
                           )
                         : Text(
                             value,
@@ -348,6 +364,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
       child: InkWell(
         onTap: () => setState(() {
           selectingStart = start;
+          enableDatePicker.value = true;
         }),
         onDoubleTap: () {
           var range = dateRange.value;
@@ -356,13 +373,14 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
           });
           tabController.animateTo(start ? range.start.month - 1 : range.end.month - 1);
         },
-        child: Builder(
-          builder: (context) {
+        child: ValueListenableBuilder<bool>(
+          valueListenable: enableDatePicker,
+          builder: (context, value, child) {
             var isRange = widget.rangerType == DateRangerType.range;
             return AnimatedContainer(
               padding: EdgeInsets.symmetric(horizontal: 22, vertical: 6),
               decoration: BoxDecoration(
-                  border: Border.all(color: selectingStart && start || !selectingStart && !start ? Theme.of(context).colorScheme.outline : Colors.transparent),
+                  border: Border.all(color: (selectingStart && start || !selectingStart && !start) && value ? Theme.of(context).colorScheme.outline : Colors.transparent),
                   color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.circular(7)),
               duration: Duration(milliseconds: 100),
