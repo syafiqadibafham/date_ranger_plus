@@ -107,7 +107,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
           alignment: Alignment.topCenter,
           children: [
             GridView(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 5),
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 7),
               shrinkWrap: true,
               //runSpacing: ranger.runSpacing,
               children: List.generate(daysInMonth, (wrapIndex) {
