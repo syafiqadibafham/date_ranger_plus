@@ -131,8 +131,8 @@ class _PrimaryPageState extends State<PrimaryPage> {
                       width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemHeight : itemWidth,
                       height: itemHeight,
                       decoration: BoxDecoration(
-                          //borderRadius: BorderRadius.horizontal(left: isStart || isExtremeStart ? borderRadius : Radius.zero, right: isEnd || isExtremeEnd || isItemsEnd ? borderRadius : Radius.zero),
-                          color: inRange && isRange && !(isStart && isEnd) ? colorScheme.secondary : Colors.transparent)),
+                          borderRadius: BorderRadius.horizontal(left: isStart || isExtremeStart ? borderRadius : Radius.zero, right: isEnd || isExtremeEnd || isItemsEnd ? borderRadius : Radius.zero),
+                          color: inRange && isRange && !(isStart && isEnd) ? colorScheme.secondary : colorScheme.background)),
                 );
               }),
             ),
