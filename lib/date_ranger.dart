@@ -126,7 +126,12 @@ class DateRanger extends StatefulWidget {
   ///Change year selection textStyle
   final TextStyle? yearSelectionTextStyle;
 
-  final bool isDatePickerEnable;
+  ///Show Error when you pick a date that;
+  ///start after end date
+  final String startDateError;
+
+  ///end before start date
+  final String endDateError;
 
   ///A date picker for selecting single dates and date ranges
   const DateRanger({
@@ -162,7 +167,8 @@ class DateRanger extends StatefulWidget {
     this.doneText = "Done",
     this.monthSelectionTextStyle,
     this.yearSelectionTextStyle,
-    this.isDatePickerEnable = true,
+    this.startDateError = "Start date cannot be after end date",
+    this.endDateError = "End date cannot be before start date",
   }) : super(key: key);
 
   @override
@@ -296,6 +302,8 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                                       monthYearTextColor: this.widget.monthYearTextColor,
                                       selectedTextColor: this.widget.selectedTextColor ?? Theme.of(context).colorScheme.onPrimary,
                                       onTap: () => enableDatePicker.value = false,
+                                      startDateError: this.widget.startDateError,
+                                      endDateError: this.widget.endDateError,
                                     );
                                   else
                                     widget = SecondaryPage(

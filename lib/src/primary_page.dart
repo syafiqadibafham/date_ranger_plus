@@ -7,8 +7,9 @@ class PrimaryPage extends StatefulWidget {
   final Color? monthYearTextColor;
   final Color selectedTextColor;
   final String doneText;
-
   final Function()? onTap;
+  final String startDateError;
+  final String endDateError;
 
   PrimaryPage({
     Key? key,
@@ -16,8 +17,10 @@ class PrimaryPage extends StatefulWidget {
     required this.onRangeChanged,
     required this.onError,
     required this.selectedTextColor,
-    this.monthYearTextColor,
     required this.doneText,
+    required this.startDateError,
+    required this.endDateError,
+    this.monthYearTextColor,
     this.onTap,
   }) : super(key: key);
 
@@ -176,7 +179,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                   var startIsAfterEnd = ranger.selectingStart && !dateTime.compareTo(value.end).isNegative && isRange;
                   var endISBeforeStart = !ranger.selectingStart && dateTime.compareTo(value.start).isNegative && isRange;
                   if (startIsAfterEnd || endISBeforeStart) {
-                    widget.onError(startIsAfterEnd ? "Start date cannot be after end date" : "End date cannot be before start date");
+                    widget.onError(startIsAfterEnd ? widget.startDateError : widget.endDateError);
                   } else {
                     ///set the start and end to the same day if is single picker
                     var newRange = isRange
