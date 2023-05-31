@@ -186,13 +186,14 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
       data: ThemeData(
           brightness: Theme.of(context).brightness,
           colorScheme: (Theme.of(context).brightness == Brightness.light ? ColorScheme.light() : ColorScheme.dark()).copyWith(
-              secondary: widget.rangeBackground,
-              error: widget.errorColor,
-              background: widget.backgroundColor,
-              primary: widget.activeItemBackground,
-              onPrimary: widget.inRangeTextColor,
-              onBackground: widget.outOfRangeTextColor,
-              primaryContainer: widget.borderColors)),
+            secondary: widget.rangeBackground,
+            error: widget.errorColor,
+            background: widget.backgroundColor,
+            primary: widget.activeItemBackground,
+            onPrimary: widget.inRangeTextColor,
+            onBackground: widget.outOfRangeTextColor,
+            outline: widget.borderColors,
+          )),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -337,7 +338,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
             return AnimatedContainer(
               padding: EdgeInsets.symmetric(horizontal: 22, vertical: 6),
               decoration: BoxDecoration(
-                  border: Border.all(color: selectingStart && start || !selectingStart && !start ? Theme.of(context).colorScheme.primaryVariant : Colors.transparent),
+                  border: Border.all(color: selectingStart && start || !selectingStart && !start ? Theme.of(context).colorScheme.outline : Colors.transparent),
                   color: Theme.of(context).colorScheme.background,
                   borderRadius: BorderRadius.circular(7)),
               duration: Duration(milliseconds: 100),
