@@ -38,6 +38,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
     ranger = InheritedRanger.of(context);
     theme = Theme.of(context);
     colorScheme = theme.colorScheme;
+
     return LayoutBuilder(
       builder: (context, constraints) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -64,7 +65,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                       ),
                     ),
                   ),
-                  chevron(left: false, active: value < 11)
+                  chevron(left: false, active: value < ranger.tabController.length - 1)
                 ],
               );
             },
@@ -88,7 +89,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
           Expanded(
             child: TabBarView(
               controller: ranger.tabController,
-              children: List.generate(12, (tabIndex) => tabView(tabIndex, constraints.maxWidth)),
+              children: List.generate(ranger.tabController.length, (tabIndex) => tabView(tabIndex, constraints.maxWidth)),
             ),
           ),
           InkWell(
@@ -154,7 +155,6 @@ class _PrimaryPageState extends State<PrimaryPage> {
           var secondary = dateTime.compareTo(!ranger.selectingStart ? value.start : value.end) == 0;
           var inRange = dateTime.isBefore(value.end) && dateTime.isAfter(value.start) || (secondary || primary);
           var borderRadius = Radius.circular(itemWidth / 2);
-          //print('dateRange: $day = $isStart');
 
           var inRangeTextColor = colorScheme.onPrimary;
           var outOfRangeTextColor = colorScheme.onBackground;

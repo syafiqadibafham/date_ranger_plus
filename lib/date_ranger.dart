@@ -181,7 +181,11 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
   late final initialDate = isRange ? DateTime.now() : widget.initialDate ?? DateTime.now();
   final showInfo = ValueNotifier(false);
   final enableDatePicker = ValueNotifier(false);
-  late ValueNotifier<DateTimeRange> dateRange = ValueNotifier(widget.initialRange ?? DateTimeRange(end: DateUtils.dateOnly(initialDate), start: DateUtils.dateOnly(initialDate)));
+  late ValueNotifier<DateTimeRange> dateRange = ValueNotifier(widget.initialRange != null
+      ? DateTimeRange(
+          start: DateTime(widget.initialRange!.start.year, widget.initialRange!.start.month, widget.initialRange!.start.day),
+          end: DateTime(widget.initialRange!.end.year, widget.initialRange!.end.month, widget.initialRange!.end.day))
+      : DateTimeRange(end: DateUtils.dateOnly(initialDate), start: DateUtils.dateOnly(initialDate)));
   late var activeYear = dateRange.value.start.year;
   late var tabController = TabController(length: 12, vsync: this);
   final activeTab = ValueNotifier(0);
@@ -269,7 +273,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                     ? LayoutBuilder(
                         builder: (context, constraints) {
                           return Container(
-                            constraints: BoxConstraints(maxHeight: calculateHeight(constraints) + 100),
+                            constraints: BoxConstraints(maxHeight: calculateHeight(constraints) + 95),
                             margin: EdgeInsets.only(bottom: 26),
                             padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding, vertical: 15).copyWith(top: 0),
                             decoration:
