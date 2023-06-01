@@ -65,7 +65,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
                       ),
                     ),
                   ),
-                  chevron(left: false, active: value < ranger.tabController.length - 1)
+                  chevron(left: false, active: value < (ranger.activeYear == DateTime.now().year ? (DateTime.now().month - 1) : (ranger.tabController.length - 1)))
                 ],
               );
             },
