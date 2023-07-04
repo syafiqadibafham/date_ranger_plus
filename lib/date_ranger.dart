@@ -2,6 +2,7 @@ library date_ranger;
 
 import 'dart:ui';
 
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -258,7 +259,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                   replacement: SizedBox(height: 8),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
-                    child: Text(
+                    child: AutoSizeText(
                       widget.doubleTapToFindDateTipText,
                       textAlign: TextAlign.center,
                       style: TextStyle(color: Theme.of(context).colorScheme.primary, fontSize: 12),
@@ -335,7 +336,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                         ? SizedBox.shrink()
                         : Padding(
                             padding: const EdgeInsets.only(bottom: 8),
-                            child: Text(
+                            child: AutoSizeText(
                               value,
                               style: TextStyle(color: Theme.of(context).colorScheme.error, fontSize: 14),
                             ),
@@ -401,7 +402,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                 crossAxisAlignment: isRange ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  AutoSizeText(
                     isRange ? "${start ? widget.startDateText : widget.endDateText}" : widget.dateText,
                     maxLines: 1,
                     style: TextStyle(color: widget.dateTextColor ?? Theme.of(context).colorScheme.onBackground.withOpacity(0.3), fontSize: 12),
@@ -410,7 +411,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                   ValueListenableBuilder<DateTimeRange>(
                     valueListenable: dateRange,
                     builder: (context, value, child) => FittedBox(
-                      child: Text(
+                      child: AutoSizeText(
                         (widget.outputDateFormat ?? DateFormat.yMd()).format(start ? value.start : value.end),
                         maxLines: 1,
                         style: widget.dateTextValueTextStyle,
