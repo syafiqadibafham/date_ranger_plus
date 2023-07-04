@@ -406,9 +406,10 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AutoSizeText(
-                    isRange ? "1${start ? widget.startDateText : widget.endDateText}" : widget.dateText,
+                    isRange ? "${start ? widget.startDateText : widget.endDateText}" : widget.dateText,
                     maxLines: 1,
                     textScaleFactor: widget.textScaleFactor,
+                    softWrap: true,
                     style: TextStyle(color: widget.dateTextColor ?? Theme.of(context).colorScheme.onBackground.withOpacity(0.3), fontSize: 12),
                   ),
                   SizedBox(height: 4),
@@ -418,6 +419,8 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                       child: AutoSizeText(
                         (widget.outputDateFormat ?? DateFormat.yMd()).format(start ? value.start : value.end),
                         maxLines: 1,
+                        textScaleFactor: widget.textScaleFactor,
+                        softWrap: true,
                         style: widget.dateTextValueTextStyle,
                       ),
                     ),
