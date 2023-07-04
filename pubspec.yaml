@@ -1,6 +1,6 @@
 name: date_ranger_plus
 description: A date picker for flutter apps to pick single dates and date ranges
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/syafiqadibafham/date_ranger_plus
 
 environment:
