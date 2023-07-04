@@ -377,24 +377,24 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
   }
 
   Widget pickerOutput([bool start = true]) {
-    return Expanded(
-      child: InkWell(
-        onTap: () => setState(() {
-          selectingStart = start;
-          enableDatePicker.value = true;
-        }),
-        onDoubleTap: () {
-          var range = dateRange.value;
-          setState(() {
-            activeYear = (start ? range.start : range.end).year;
-          });
-          tabController.animateTo(start ? range.start.month - 1 : range.end.month - 1);
-        },
-        child: ValueListenableBuilder<bool>(
-          valueListenable: enableDatePicker,
-          builder: (context, value, child) {
-            var isRange = widget.rangerType == DateRangerType.range;
-            return AnimatedContainer(
+    return InkWell(
+      onTap: () => setState(() {
+        selectingStart = start;
+        enableDatePicker.value = true;
+      }),
+      onDoubleTap: () {
+        var range = dateRange.value;
+        setState(() {
+          activeYear = (start ? range.start : range.end).year;
+        });
+        tabController.animateTo(start ? range.start.month - 1 : range.end.month - 1);
+      },
+      child: ValueListenableBuilder<bool>(
+        valueListenable: enableDatePicker,
+        builder: (context, value, child) {
+          var isRange = widget.rangerType == DateRangerType.range;
+          return Expanded(
+            child: AnimatedContainer(
               padding: EdgeInsets.symmetric(horizontal: 22, vertical: 6),
               decoration: BoxDecoration(
                   border: Border.all(color: (selectingStart && start || !selectingStart && !start) && value ? Theme.of(context).colorScheme.outline : Colors.transparent),
@@ -404,6 +404,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
               child: Column(
                 crossAxisAlignment: isRange ? CrossAxisAlignment.start : CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   AutoSizeText(
                     isRange ? "${start ? widget.startDateText : widget.endDateText}" : widget.dateText,
@@ -427,9 +428,9 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                   )
                 ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }
