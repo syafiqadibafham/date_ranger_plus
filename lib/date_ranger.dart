@@ -393,7 +393,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
         valueListenable: enableDatePicker,
         builder: (context, value, child) {
           var isRange = widget.rangerType == DateRangerType.range;
-          return Expanded(
+          return Flexible(
             child: AnimatedContainer(
               padding: EdgeInsets.symmetric(horizontal: 22, vertical: 6),
               decoration: BoxDecoration(
