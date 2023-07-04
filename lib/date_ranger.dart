@@ -134,6 +134,8 @@ class DateRanger extends StatefulWidget {
   ///end before start date
   final String endDateError;
 
+  final double? textScaleFactor;
+
   ///A date picker for selecting single dates and date ranges
   const DateRanger({
     Key? key,
@@ -170,6 +172,7 @@ class DateRanger extends StatefulWidget {
     this.yearSelectionTextStyle,
     this.startDateError = "Start date cannot be after end date",
     this.endDateError = "End date cannot be before start date",
+    this.textScaleFactor,
   }) : super(key: key);
 
   @override
@@ -403,8 +406,9 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   AutoSizeText(
-                    isRange ? "${start ? widget.startDateText : widget.endDateText}" : widget.dateText,
+                    isRange ? "1${start ? widget.startDateText : widget.endDateText}" : widget.dateText,
                     maxLines: 1,
+                    textScaleFactor: widget.textScaleFactor,
                     style: TextStyle(color: widget.dateTextColor ?? Theme.of(context).colorScheme.onBackground.withOpacity(0.3), fontSize: 12),
                   ),
                   SizedBox(height: 4),
