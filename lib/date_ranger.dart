@@ -308,6 +308,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                                       onTap: () => enableDatePicker.value = false,
                                       startDateError: this.widget.startDateError,
                                       endDateError: this.widget.endDateError,
+                                      textScaleFactor: this.widget.textScaleFactor,
                                     );
                                   else
                                     widget = SecondaryPage(

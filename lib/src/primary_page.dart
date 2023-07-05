@@ -10,6 +10,7 @@ class PrimaryPage extends StatefulWidget {
   final Function()? onTap;
   final String startDateError;
   final String endDateError;
+  final double? textScaleFactor;
 
   PrimaryPage({
     Key? key,
@@ -22,6 +23,7 @@ class PrimaryPage extends StatefulWidget {
     required this.endDateError,
     this.monthYearTextColor,
     this.onTap,
+    this.textScaleFactor,
   }) : super(key: key);
 
   @override
@@ -89,6 +91,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
           Expanded(
             child: TabBarView(
               controller: ranger.tabController,
+              clipBehavior: Clip.none,
               children: List.generate(ranger.tabController.length, (tabIndex) => tabView(tabIndex, constraints.maxWidth)),
             ),
           ),
@@ -96,7 +99,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
             onTap: widget.onTap,
             child: Padding(
               padding: const EdgeInsets.all(5),
-              child: Text(
+              child: AutoSizeText(
                 widget.doneText,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: colorScheme.primary),
               ),
@@ -169,12 +172,13 @@ class _PrimaryPageState extends State<PrimaryPage> {
             clipBehavior: Clip.none,
             children: [
               Container(
-                  // width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemWidth : itemWidth,
-                  //height: itemHeight,
-                  margin: EdgeInsets.only(top: 3, bottom: 3),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.horizontal(left: isStart ? borderRadius : Radius.zero, right: isEnd ? borderRadius : Radius.zero),
-                      color: inRange && isRange && !(isStart && isEnd) ? colorScheme.secondary : colorScheme.background)),
+                // width: isItemsEnd && isExtremeStart || isStart && isExtremeEnd || (isExtremeStart && isEnd) || !isRange ? itemWidth : itemWidth,
+                //height: itemHeight,
+                margin: EdgeInsets.only(top: 3, bottom: 3),
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.horizontal(left: isStart ? borderRadius : Radius.zero, right: isEnd ? borderRadius : Radius.zero),
+                    color: inRange && isRange && !(isStart && isEnd) ? colorScheme.secondary : colorScheme.background),
+              ),
               InkResponse(
                 onTap: () async {
                   var startIsAfterEnd = ranger.selectingStart && !dateTime.compareTo(value.end).isNegative && isRange;
@@ -200,10 +204,11 @@ class _PrimaryPageState extends State<PrimaryPage> {
                         border: Border.all(color: primary ? colorScheme.outline : Colors.transparent, width: 2),
                         color: primary || secondary ? colorScheme.primary : Colors.transparent),
                     duration: Duration(milliseconds: 500),
-                    child: Text(
+                    child: AutoSizeText(
                       "${wrapIndex + 1}",
                       maxLines: 1,
                       textAlign: TextAlign.center,
+                      textScaleFactor: widget.textScaleFactor,
                       style: TextStyle(
                           fontSize: 14,
                           color: primary || secondary
