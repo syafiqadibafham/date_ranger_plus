@@ -273,7 +273,7 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
                     ? LayoutBuilder(
                         builder: (context, constraints) {
                           return Container(
-                            constraints: BoxConstraints(maxHeight: calculateHeight(constraints) + 95),
+                            constraints: BoxConstraints(maxHeight: calculateHeight(constraints) + 135),
                             margin: EdgeInsets.only(bottom: 26),
                             padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding, vertical: 15).copyWith(top: 0),
                             decoration:

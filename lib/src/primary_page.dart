@@ -61,8 +61,9 @@ class _PrimaryPageState extends State<PrimaryPage> {
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 10).copyWith(top: 24),
-                      child: Text(
+                      child: AutoSizeText(
                         DateFormat("${DateFormat.ABBR_MONTH} ${DateFormat.YEAR}").format(tabDate),
+                        textScaleFactor: this.widget.textScaleFactor,
                         style: TextStyle(fontSize: 16.0).copyWith(color: widget.monthYearTextColor),
                       ),
                     ),
@@ -88,7 +89,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
           //             )),
           //   ),
           // ),
-          Expanded(
+          Flexible(
             child: TabBarView(
               controller: ranger.tabController,
               clipBehavior: Clip.none,
@@ -101,6 +102,7 @@ class _PrimaryPageState extends State<PrimaryPage> {
               padding: const EdgeInsets.all(5),
               child: AutoSizeText(
                 widget.doneText,
+                textScaleFactor: this.widget.textScaleFactor,
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: colorScheme.primary),
               ),
             ),
