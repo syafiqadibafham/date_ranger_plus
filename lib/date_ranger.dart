@@ -231,27 +231,23 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(
-            height: 55,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                pickerOutput(),
-                if (widget.rangerType == DateRangerType.range) ...[
-                  Center(
-                      child: SizedBox(
-                          width: 32,
-                          child: Divider(
-                            endIndent: 12,
-                            indent: 12,
-                            thickness: 2,
-                            color: widget.dateTextValueTextStyle?.color ?? Theme.of(context).colorScheme.onBackground,
-                          ))),
-                  pickerOutput(false)
-                ],
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              pickerOutput(),
+              if (widget.rangerType == DateRangerType.range) ...[
+                Center(
+                    child: SizedBox(
+                        width: 32,
+                        child: Divider(
+                          endIndent: 12,
+                          indent: 12,
+                          thickness: 2,
+                          color: widget.dateTextValueTextStyle?.color ?? Theme.of(context).colorScheme.onBackground,
+                        ))),
+                pickerOutput(false)
               ],
-            ),
+            ],
           ),
           ValueListenableBuilder<bool>(
             valueListenable: showInfo,
@@ -377,59 +373,62 @@ class _DateRangerState extends State<DateRanger> with SingleTickerProviderStateM
   }
 
   Widget pickerOutput([bool start = true]) {
-    return InkWell(
-      onTap: () => setState(() {
-        selectingStart = start;
-        enableDatePicker.value = true;
-      }),
-      onDoubleTap: () {
-        var range = dateRange.value;
-        setState(() {
-          activeYear = (start ? range.start : range.end).year;
-        });
-        tabController.animateTo(start ? range.start.month - 1 : range.end.month - 1);
-      },
-      child: ValueListenableBuilder<bool>(
-        valueListenable: enableDatePicker,
-        builder: (context, value, child) {
-          var isRange = widget.rangerType == DateRangerType.range;
-          return AnimatedContainer(
-            padding: EdgeInsets.symmetric(horizontal: 22, vertical: 6),
-            decoration: BoxDecoration(
-                border: Border.all(color: (selectingStart && start || !selectingStart && !start) && value ? Theme.of(context).colorScheme.outline : Colors.transparent),
-                color: Theme.of(context).colorScheme.background,
-                borderRadius: BorderRadius.circular(7)),
-            duration: Duration(milliseconds: 100),
-            child: Column(
-              crossAxisAlignment: isRange ? CrossAxisAlignment.start : CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                AutoSizeText(
-                  isRange ? "${start ? widget.startDateText : widget.endDateText}" : widget.dateText,
-                  maxLines: 1,
-                  minFontSize: 5,
-                  textScaleFactor: widget.textScaleFactor,
-                  softWrap: true,
-                  style: TextStyle(color: widget.dateTextColor ?? Theme.of(context).colorScheme.onBackground.withOpacity(0.3), fontSize: 12),
-                ),
-                SizedBox(height: 4),
-                ValueListenableBuilder<DateTimeRange>(
-                  valueListenable: dateRange,
-                  builder: (context, value, child) => FittedBox(
-                    child: AutoSizeText(
-                      (widget.outputDateFormat ?? DateFormat.yMd()).format(start ? value.start : value.end),
-                      maxLines: 1,
-                      minFontSize: 6,
-                      textScaleFactor: widget.textScaleFactor,
-                      softWrap: true,
-                      style: widget.dateTextValueTextStyle,
-                    ),
-                  ),
-                )
-              ],
-            ),
-          );
+    return Expanded(
+      child: InkWell(
+        onTap: () => setState(() {
+          selectingStart = start;
+          enableDatePicker.value = true;
+        }),
+        onDoubleTap: () {
+          var range = dateRange.value;
+          setState(() {
+            activeYear = (start ? range.start : range.end).year;
+          });
+          tabController.animateTo(start ? range.start.month - 1 : range.end.month - 1);
         },
+        child: ValueListenableBuilder<bool>(
+          valueListenable: enableDatePicker,
+          builder: (context, value, child) {
+            var isRange = widget.rangerType == DateRangerType.range;
+            return AnimatedContainer(
+              padding: EdgeInsets.symmetric(horizontal: 22, vertical: 6),
+              decoration: BoxDecoration(
+                  border: Border.all(color: (selectingStart && start || !selectingStart && !start) && value ? Theme.of(context).colorScheme.outline : Colors.transparent),
+                  color: Theme.of(context).colorScheme.background,
+                  borderRadius: BorderRadius.circular(7)),
+              duration: Duration(milliseconds: 100),
+              child: Column(
+                crossAxisAlignment: isRange ? CrossAxisAlignment.start : CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  AutoSizeText(
+                    isRange ? "${start ? widget.startDateText : widget.endDateText}" : widget.dateText,
+                    maxLines: 1,
+                    minFontSize: 5,
+                    textScaleFactor: widget.textScaleFactor,
+                    softWrap: true,
+                    style: TextStyle(color: widget.dateTextColor ?? Theme.of(context).colorScheme.onBackground.withOpacity(0.3), fontSize: 12),
+                  ),
+                  SizedBox(height: 4),
+                  ValueListenableBuilder<DateTimeRange>(
+                    valueListenable: dateRange,
+                    builder: (context, value, child) => FittedBox(
+                      child: AutoSizeText(
+                        (widget.outputDateFormat ?? DateFormat.yMd()).format(start ? value.start : value.end),
+                        maxLines: 1,
+                        minFontSize: 6,
+                        textScaleFactor: widget.textScaleFactor,
+                        softWrap: true,
+                        style: widget.dateTextValueTextStyle,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            );
+          },
+        ),
       ),
     );
   }
